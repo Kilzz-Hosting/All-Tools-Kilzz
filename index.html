@@ -48,12 +48,24 @@ a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
 .hero>video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:center;z-index:0}
 .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,6,18,.05),rgba(10,6,18,.15) 35%,rgba(10,6,18,.7) 78%,var(--bg) 100%);z-index:1;pointer-events:none}
 .hero-text{position:absolute;left:16px;right:16px;bottom:16px;z-index:2}
-.hero-title{font-size:clamp(19px,6.1vw,26px);font-weight:800;color:#fff;text-shadow:0 2px 20px rgba(168,85,247,.6);display:flex;align-items:center;gap:7px;white-space:nowrap}
+.hero-title{
+  font-size:clamp(10px,6.1vw,15px);
+  font-weight:800;
+  background: linear-gradient(
+    90deg,
+    rgba(137, 4, 222, 0.8) 40%,
+    rgba(137, 4, 222, 1) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+;text-shadow:0 2px 20px rgba(168,85,247,.6);display:flex;align-items:center;gap:7px;white-space:nowrap}
 .hero-title svg{width:20px;height:20px;color:var(--violet-1);filter:drop-shadow(0 0 6px var(--violet-1));flex-shrink:0}
 .hero-sub{font-size:11px;color:var(--text-dim);margin-top:2px;letter-spacing:.08em;text-transform:lowercase}
 
 .card{background:var(--surface);border:1px solid var(--border-soft);border-radius:var(--radius-lg)}
-.profile{margin:-18px 12px 0;position:relative;z-index:3;padding:12px;display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.profile{margin: 12px 0;position:relative;z-index:3;padding:12px;display:flex;flex-direction:column;gap:10px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .profile-top{display:flex;align-items:center;gap:10px;min-width:0}.avatar{width:42px;height:42px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--violet-1),var(--pink));display:flex;align-items:center;justify-content:center}
 .avatar svg{width:20px;height:20px;color:#fff}
 .profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px 10px;flex:1;min-width:0;font-size:clamp(9px,2.8vw,12px)}
@@ -160,7 +172,7 @@ a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
     <div class="icon-btn" onclick="alert('Menu tambahan belum diisi — sambungkan sesuai kebutuhanmu.')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg></div>
   </div>
 
-  <div class="hero" id="heroBanner"><div class="hero-text"><div class="hero-title display"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>ALL TOOLS Kilzz</div><div class="hero-sub tech">by Kilzz</div></div></div>
+  <div class="hero" id="heroBanner"><div class="hero-text"><div class="hero-title display"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>ALL TOOLS KILZZ</div><div class="hero-sub tech">by Kilzz</div></div></div>
 
   <div class="profile card">
     <div class="profile-top">
@@ -174,15 +186,14 @@ a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
     </div>
     <div class="profile-bottom">
       <div class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 10v4"/></svg><span class="battery-bar"><span class="battery-fill" id="battFill"></span></span><span id="battPct">--%</span></div>
-      <div class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg>Role : member</div>
-      <div class="pill vip"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z"/></svg>VIP</div>
+      <div class="pill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg>Role : Owner</div>
     </div>
   </div>
 
   <div class="tabs">
-    <button class="tab active tech" data-tab="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>All</button>
-    <button class="tab tech" data-tab="downloader"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>Downloader</button>
-    <button class="tab tech" data-tab="tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 01-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 015.4-5.4l-3-3z"/></svg>Tools</button>
+    <button class="tab active pill" data-tab="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>All</button>
+    <button class="tab pill" data-tab="downloader"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>Downloader</button>
+    <button class="tab pill" data-tab="tools"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 01-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 015.4-5.4l-3-3z"/></svg>Tools</button>
   </div>
 
   <div class="section" data-group="downloader"><div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>Downloader<span class="line"></span></div><div class="grid" id="downloaderGrid"></div></div>
