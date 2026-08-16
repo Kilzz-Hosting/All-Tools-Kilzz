@@ -1,1 +1,1012 @@
-halo
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>All Tools Nexus</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     CONFIG CEPAT — ganti nilai di bawah tanpa perlu paham CSS/JS
+     ============================================================ */
+  :root{
+    --bg:#0a0612;
+    --bg-alt:#120a1e;
+    --surface: rgba(168,85,247,0.07);
+    --surface-strong: rgba(168,85,247,0.13);
+    --border: rgba(168,85,247,0.25);
+    --border-soft: rgba(168,85,247,0.15);
+    --violet-1:#a855f7;
+    --violet-2:#7c3aed;
+    --violet-3:#6d28d9;
+    --pink:#ec4899;
+    --text:#f3eefc;
+    --text-dim:#b6a8cf;
+    --text-faint:#8577a3;
+    --ok:#22d67a;
+    --warn:#facc15;
+    --err:#fb7185;
+    --radius-lg:22px;
+    --radius-md:16px;
+    --radius-sm:12px;
+    --radius-pill:999px;
+  }
+
+  *{box-sizing:border-box; -webkit-tap-highlight-color:transparent;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(124,58,237,0.35), transparent 60%),
+      radial-gradient(900px 500px at 100% 10%, rgba(236,72,153,0.18), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', -apple-system, sans-serif;
+    min-height:100vh;
+    padding-bottom:40px;
+  }
+  ::selection{ background: var(--violet-2); color:#fff; }
+  ::-webkit-scrollbar{ width:6px; height:6px; }
+  ::-webkit-scrollbar-thumb{ background: var(--border); border-radius:4px; }
+
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; }
+
+  .display{ font-family:'Orbitron', sans-serif; letter-spacing:0.02em; }
+  .tech{ font-family:'Rajdhani', sans-serif; }
+
+  .wrap{ max-width:520px; margin:0 auto; padding:0 16px; }
+
+  /* ---------- Top bar ---------- */
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:10px; padding:14px 16px 10px;
+    position:sticky; top:0; z-index:40;
+    background:rgba(10,6,18,0.82);
+    backdrop-filter: blur(14px);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .topbar-left{ display:flex; align-items:center; gap:10px; min-width:0; }
+  .icon-btn{
+    width:38px; height:38px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--surface); border:1px solid var(--border-soft);
+    color:var(--text); flex-shrink:0;
+  }
+  .topbar-title{ font-size:14px; font-weight:700; line-height:1.2; }
+  .topbar-sub{ font-size:11px; color:var(--text-faint); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .player{
+    display:flex; align-items:center; gap:8px;
+    background:linear-gradient(135deg, var(--violet-3), var(--violet-2));
+    border-radius:var(--radius-pill);
+    padding:6px 10px 6px 12px;
+    flex-shrink:0;
+    box-shadow:0 4px 18px rgba(124,58,237,0.35);
+  }
+  .eq{ display:flex; align-items:flex-end; gap:2px; height:14px; }
+  .eq span{ width:3px; background:#fff; border-radius:2px; animation: eq 0.9s ease-in-out infinite; }
+  .eq span:nth-child(1){ height:40%; animation-delay:0s; }
+  .eq span:nth-child(2){ height:100%; animation-delay:0.15s; }
+  .eq span:nth-child(3){ height:65%; animation-delay:0.3s; }
+  .player.paused .eq span{ animation-play-state:paused; height:30% !important; }
+  @keyframes eq{ 0%,100%{ transform:scaleY(0.4);} 50%{ transform:scaleY(1);} }
+  .player button{ background:none; border:none; color:#fff; display:flex; padding:2px; }
+  .player button svg{ width:15px; height:15px; }
+
+  /* ---------- Hero ---------- */
+ .hero{
+  position:relative;
+  margin-top:12px;
+  border-radius:0 0 28px 28px;
+  overflow:hidden;
+  height:clamp(190px, 52vw, 250px);
+  background-size:cover;
+  background-position:center;
+  background-color:#1a0f2e;
+}
+
+.hero > video{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  z-index:0;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:
+    linear-gradient(
+      180deg,
+      rgba(10,6,18,0.05) 0%,
+      rgba(10,6,18,0.15) 35%,
+      rgba(10,6,18,0.7) 78%,
+      var(--bg) 100%
+    );
+  z-index:1;
+  pointer-events:none;
+}
+
+.hero-text{
+  position:absolute;
+  left:18px;
+  right:18px;
+  bottom:18px;
+  z-index:2;
+}
+  .hero-title{ font-size:26px; font-weight:800; color:#fff; text-shadow:0 2px 20px rgba(168,85,247,0.6); display:flex; align-items:center; gap:8px; }
+  .hero-title svg{ width:22px; height:22px; color:var(--violet-1); filter:drop-shadow(0 0 6px var(--violet-1)); }
+  .hero-sub{ font-size:12px; color:var(--text-dim); margin-top:2px; letter-spacing:0.08em; text-transform:lowercase; }
+
+  /* ---------- Profile card ---------- */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border-soft);
+    border-radius:var(--radius-lg);
+  }
+ .profile{
+  margin:-18px 16px 0;
+  position:relative;
+  z-index:3;
+  padding:14px;
+  display:flex;
+  flex-direction:column;
+  gap:11px;
+  backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+}
+
+.profile-top{
+  min-width:0;
+}
+
+.profile-grid{
+  min-width:0;
+}
+
+@media (max-width:380px){
+  .profile{
+    margin-left:12px;
+    margin-right:12px;
+    padding:12px;
+    gap:10px;
+  }
+
+  .avatar{
+    width:42px;
+    height:42px;
+  }
+
+  .profile-grid{
+    gap:7px 10px;
+    font-size:11px;
+  }
+
+  .profile-item{
+    gap:4px;
+  }
+
+  .pill{
+    padding:6px 10px;
+    font-size:11px;
+  }
+}
+
+@media (min-width:381px) and (max-width:600px){
+  .profile{
+    margin-left:16px;
+    margin-right:16px;
+  }
+}
+
+  .profile-top{ display:flex; align-items:center; gap:12px; }
+  .avatar{
+    width:46px; height:46px; border-radius:50%; flex-shrink:0;
+    background:linear-gradient(135deg, var(--violet-1), var(--pink));
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 0 0 2px rgba(255,255,255,0.08);
+  }
+  .avatar svg{ width:22px; height:22px; color:#fff; }
+  .profile-grid{ display:grid; grid-template-columns:1fr 1fr; gap:8px 14px; flex:1; font-size:12px; }
+  .profile-item{ display:flex; align-items:center; gap:6px; color:var(--text-dim); min-width:0; }
+  .profile-item svg{ width:13px; height:13px; flex-shrink:0; color:var(--violet-1); }
+  .profile-item b{ color:var(--text); font-weight:600; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .dot{ width:6px; height:6px; border-radius:50%; background:var(--ok); flex-shrink:0; box-shadow:0 0 6px var(--ok); }
+
+  .profile-bottom{ display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+  .pill{
+    display:flex; align-items:center; gap:6px;
+    padding:7px 13px; border-radius:var(--radius-pill);
+    background:var(--surface-strong); border:1px solid var(--border-soft);
+    font-size:12px; font-weight:600; color:var(--text-dim);
+  }
+  .pill svg{ width:13px; height:13px; color:var(--violet-1); }
+  .pill.vip{
+    background:linear-gradient(135deg, #f59e0b, #ec4899);
+    color:#fff; border:none;
+  }
+  .pill.vip svg{ color:#fff; }
+  .battery-bar{ width:34px; height:8px; border-radius:3px; background:rgba(255,255,255,0.12); overflow:hidden; }
+  .battery-fill{
+  height:100%;
+  width:70%;
+  border-radius:3px;
+  background:#22d67a;
+  transition:width .3s ease, background .3s ease;
+}
+
+  /* ---------- Tabs ---------- */
+  .tabs{ display:flex; gap:8px; padding:18px 16px 4px; overflow-x:auto; }
+  .tab{
+    display:flex; align-items:center; gap:6px; flex-shrink:0;
+    padding:9px 16px; border-radius:var(--radius-pill);
+    border:1px solid var(--border-soft); background:var(--surface);
+    color:var(--text-dim); font-size:13px; font-weight:600;
+  }
+  .tab svg{ width:14px; height:14px; }
+  .tab.active{
+    background:linear-gradient(135deg, var(--violet-2), var(--violet-1));
+    color:#fff; border-color:transparent;
+    box-shadow:0 4px 16px rgba(124,58,237,0.4);
+  }
+
+  /* ---------- Section ---------- */
+  .section{ padding:18px 16px 6px; }
+  .section-title{
+    display:flex; align-items:center; gap:8px;
+    font-size:13px; font-weight:700; letter-spacing:0.06em;
+    text-transform:uppercase; color:var(--text-dim); margin-bottom:12px;
+  }
+  .section-title svg{ width:15px; height:15px; color:var(--violet-1); }
+  .section-title .line{ flex:1; height:1px; background:linear-gradient(90deg, var(--border), transparent); }
+
+  .grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; }
+  @media (max-width:360px){ .grid{ grid-template-columns:1fr 1fr; } }
+
+  .tool-card{
+    background:var(--surface); border:1px solid var(--border-soft);
+    border-radius:var(--radius-md); padding:14px 10px;
+    display:flex; flex-direction:column; align-items:flex-start; gap:8px;
+    text-align:left; transition:transform .15s ease, border-color .15s ease;
+    position:relative; overflow:hidden;
+  }
+  .tool-card:active{ transform:scale(0.96); }
+  .tool-card.disabled{ opacity:0.45; }
+  .tool-icon{
+    width:34px; height:34px; border-radius:10px;
+    display:flex; align-items:center; justify-content:center;
+    background:var(--tool-color, linear-gradient(135deg, var(--violet-1), var(--violet-3)));
+  }
+  .tool-icon svg{ width:17px; height:17px; color:#fff; }
+  .tool-name{ font-size:12.5px; font-weight:700; line-height:1.2; }
+  .tool-desc{ font-size:10.5px; color:var(--text-faint); line-height:1.3; min-height:26px; }
+  .tool-badge{
+    font-size:9px; font-weight:700; letter-spacing:0.04em;
+    padding:2px 7px; border-radius:var(--radius-pill);
+    background:var(--surface-strong); color:var(--text-dim);
+  }
+  .tool-go{ margin-left:auto; color:var(--violet-1); }
+  .tool-go svg{ width:14px; height:14px; }
+  .tool-foot{ display:flex; align-items:center; width:100%; }
+
+  /* ---------- Detail view ---------- */
+  .view{ display:none; }
+  .view.active{ display:block; }
+  #home-view.active{ display:block; }
+
+  .detail-topbar{
+    display:flex; align-items:center; gap:10px; padding:14px 16px;
+    position:sticky; top:0; z-index:40;
+    background:rgba(10,6,18,0.85); backdrop-filter:blur(14px);
+    border-bottom:1px solid var(--border-soft);
+  }
+  .back-btn{
+    display:flex; align-items:center; gap:6px;
+    padding:8px 12px; border-radius:var(--radius-pill);
+    background:var(--surface); border:1px solid var(--border-soft);
+    font-size:12px; font-weight:600; color:var(--text);
+  }
+  .back-btn svg{ width:14px; height:14px; }
+  .detail-topbar-title{ display:flex; align-items:center; gap:6px; font-size:12px; font-weight:700; color:var(--text-dim); }
+  .detail-topbar-title svg{ width:14px; height:14px; }
+  .live-dot{ width:8px; height:8px; border-radius:50%; background:var(--ok); margin-left:auto; box-shadow:0 0 8px var(--ok); }
+
+  .detail-hero{ padding:22px 16px 0; }
+  .detail-eyebrow{
+    display:flex; align-items:center; gap:6px; font-size:11px; font-weight:700;
+    letter-spacing:0.08em; text-transform:uppercase; color:var(--dl-color, var(--violet-1)); margin-bottom:8px;
+  }
+  .detail-title{ font-size:26px; font-weight:800; }
+  .detail-desc{ font-size:13px; color:var(--text-dim); margin-top:8px; line-height:1.5; }
+
+  .status-card{
+    margin:18px 16px 0; padding:12px 14px; display:flex; align-items:center; gap:10px;
+  }
+  .status-dot{ width:9px; height:9px; border-radius:50%; flex-shrink:0; }
+  .status-dot.pending{ background:var(--warn); box-shadow:0 0 6px var(--warn); }
+  .status-dot.ok{ background:var(--ok); box-shadow:0 0 6px var(--ok); }
+  .status-dot.bad{ background:var(--err); box-shadow:0 0 6px var(--err); }
+  .status-text b{ font-size:12.5px; display:block; }
+  .status-text span{ font-size:11px; color:var(--text-faint); }
+  .status-refresh{ margin-left:auto; width:30px; height:30px; border-radius:10px; background:var(--surface-strong); border:1px solid var(--border-soft); display:flex; align-items:center; justify-content:center; }
+  .status-refresh svg{ width:14px; height:14px; color:var(--text-dim); }
+
+  .feature-line{ margin:14px 16px 0; font-size:12px; color:var(--text-dim); line-height:1.5; }
+
+  .form-card{ margin:16px 16px 0; padding:16px; display:flex; flex-direction:column; gap:12px; }
+  .field-label{ font-size:11px; font-weight:700; color:var(--text-faint); text-transform:uppercase; letter-spacing:0.05em; }
+  .quality-row{ display:flex; gap:8px; flex-wrap:wrap; }
+  .quality-chip{
+    padding:7px 13px; border-radius:var(--radius-pill); font-size:12px; font-weight:600;
+    background:var(--surface-strong); border:1px solid var(--border-soft); color:var(--text-dim);
+  }
+  .quality-chip.active{ background:linear-gradient(135deg, var(--dl-color,var(--violet-2)), var(--violet-1)); color:#fff; border-color:transparent; }
+
+  .url-input{
+    width:100%; padding:14px 16px; border-radius:var(--radius-md);
+    background:rgba(255,255,255,0.04); border:1px solid var(--border-soft);
+    color:var(--text); font-size:13px; outline:none;
+  }
+  .url-input::placeholder{ color:var(--text-faint); }
+  .url-input:focus{ border-color:var(--violet-1); }
+
+  .btn-main{
+    width:100%; padding:15px; border:none; border-radius:var(--radius-md);
+    background:linear-gradient(135deg, var(--dl-color, var(--violet-2)), var(--pink));
+    color:#fff; font-size:14px; font-weight:700;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    box-shadow:0 8px 24px -6px var(--dl-shadow, rgba(124,58,237,0.55));
+  }
+  .btn-main:disabled{ opacity:0.5; }
+  .btn-main svg{ width:16px; height:16px; }
+
+  .spinner{ width:16px; height:16px; border-radius:50%; border:2px solid rgba(255,255,255,0.35); border-top-color:#fff; animation:spin .7s linear infinite; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+
+  .msg{ margin:14px 16px 0; padding:12px 14px; border-radius:var(--radius-md); font-size:12.5px; line-height:1.5; display:none; }
+  .msg.show{ display:block; }
+  .msg.err{ background:rgba(251,113,133,0.12); border:1px solid rgba(251,113,133,0.35); color:#ffc4cd; }
+  .msg.info{ background:rgba(168,85,247,0.1); border:1px solid var(--border); color:var(--text-dim); }
+
+  .result-card{ margin:16px 16px 0; overflow:hidden; display:none; }
+  .result-card.show{ display:block; }
+  .result-thumb{ width:100%; aspect-ratio:16/9; object-fit:cover; background:#1a0f2e; display:block; }
+  .result-body{ padding:14px; }
+  .result-title{ font-size:14px; font-weight:700; line-height:1.4; }
+  .result-meta{ display:flex; gap:14px; margin-top:8px; font-size:11px; color:var(--text-faint); }
+  .result-meta span{ display:flex; align-items:center; gap:4px; }
+  .result-meta svg{ width:12px; height:12px; }
+  .dl-list{ display:flex; flex-direction:column; gap:8px; margin-top:14px; }
+  .dl-item{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:12px 14px; border-radius:var(--radius-sm);
+    background:var(--surface-strong); border:1px solid var(--border-soft);
+    font-size:12.5px; font-weight:600;
+  }
+  .dl-item span{ display:flex; align-items:center; gap:8px; color:var(--text); }
+  .dl-item svg.file-ic{ width:15px; color:var(--dl-color,var(--violet-1)); }
+  .dl-btn{
+    display:flex; align-items:center; gap:5px; padding:7px 13px; border-radius:var(--radius-pill);
+    background:linear-gradient(135deg, var(--dl-color,var(--violet-2)), var(--pink)); color:#fff; font-size:11.5px; font-weight:700;
+  }
+  .dl-btn svg{ width:12px; height:12px; }
+
+  .raw-toggle{ margin:14px 16px 40px; font-size:11px; color:var(--text-faint); text-decoration:underline; display:inline-block; }
+  .raw-json{ display:none; margin:8px 16px 40px; padding:12px; font-size:10px; white-space:pre-wrap; word-break:break-all; color:var(--text-faint); max-height:220px; overflow:auto; }
+  .raw-json.show{ display:block; }
+
+  .footer-note{ text-align:center; font-size:10.5px; color:var(--text-faint); padding:24px 16px 4px; }
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HOME VIEW
+============================================================ -->
+<div id="home-view" class="view active">
+
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="icon-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <div>
+        <div class="topbar-title">Menu Informasi</div>
+        <div class="topbar-sub">About Dev · Report Bug · Saluran WhatsApp</div>
+      </div>
+    </div>
+    <div class="player" id="player">
+      <div class="eq"><span></span><span></span><span></span></div>
+      <button id="playPauseBtn" title="Play/Pause">
+        <svg id="playIcon" viewBox="0 0 24 24" fill="currentColor" style="display:none"><path d="M8 5v14l11-7z"/></svg>
+        <svg id="pauseIcon" viewBox="0 0 24 24" fill="currentColor"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+      </button>
+      <button id="nextBtn" title="Next track">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M6 5l10 7-10 7V5zM18 5h2v14h-2z"/></svg>
+      </button>
+    </div>
+    <div class="icon-btn" onclick="alert('Menu tambahan belum diisi — sambungkan sesuai kebutuhanmu.')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+    </div>
+  </div>
+
+  <div class="hero" id="heroBanner">
+    <div class="hero-text">
+      <div class="hero-title display">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7v8l10-12h-7z"/></svg>
+        ALL TOOLS NEXUS
+      </div>
+      <div class="hero-sub tech">by karl</div>
+    </div>
+  </div>
+
+  <div class="profile card">
+    <div class="profile-top">
+      <div class="avatar">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 12c2.7 0 4.9-2.2 4.9-4.9S14.7 2.2 12 2.2 7.1 4.4 7.1 7.1 9.3 12 12 12zm0 2.4c-3.3 0-9.8 1.6-9.8 4.9v2.5h19.6v-2.5c0-3.3-6.5-4.9-9.8-4.9z"/></svg>
+      </div>
+      <div class="profile-grid">
+        <div class="profile-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15 15 0 010 20 15 15 0 010-20z"/></svg>NEGARA <b id="infoCountry">Indonesia</b></div>
+        <div class="profile-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2"/></svg>DEVICE <b id="infoDevice">-</b></div>
+        <div class="profile-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 8s4-4 10-4 10 4 10 4M5 12s3-3 7-3 7 3 7 3M8.5 15.5s1.5-1.5 3.5-1.5 3.5 1.5 3.5 1.5M12 19h.01"/></svg>BROWSER <b id="infoBrowser">-</b></div>
+        <div class="profile-item"><span class="dot"></span>STATUS <b>Online</b></div>
+      </div>
+    </div>
+    <div class="profile-bottom">
+      <div class="pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="18" height="10" rx="2"/><path d="M22 10v4" stroke-width="2" fill="none"/></svg>
+        <span class="battery-bar"><span class="battery-fill" id="battFill" style="width:70%"></span></span>
+        <span id="battPct">--%</span>
+      </div>
+      <div class="pill">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6 8-6s8 2 8 6"/></svg>
+        Role : member
+      </div>
+      <div class="pill vip">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M5 16L3 6l5.5 4L12 4l3.5 6L21 6l-2 10H5zm0 2h14v2H5v-2z"/></svg>
+        VIP
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active tech" data-tab="all">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+      All
+    </button>
+    <button class="tab tech" data-tab="downloader">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+      Downloader
+    </button>
+    <button class="tab tech" data-tab="tools">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 01-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 015.4-5.4l-3-3z"/></svg>
+      Tools
+    </button>
+  </div>
+
+  <!-- DOWNLOADER SECTION -->
+  <div class="section" data-group="downloader">
+    <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>Downloader<span class="line"></span></div>
+    <div class="grid" id="downloaderGrid"></div>
+  </div>
+
+  <!-- TOOLS SECTION -->
+  <div class="section" data-group="tools">
+    <div class="section-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a4 4 0 01-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 015.4-5.4l-3-3z"/></svg>Tools<span class="line"></span></div>
+    <div class="grid" id="toolsGrid"></div>
+  </div>
+
+  <div class="footer-note">All Tools Nexus · dibuat oleh Karl</div>
+</div>
+
+<!-- ============================================================
+     DETAIL VIEW (template — diisi ulang lewat JS tiap dibuka)
+============================================================ -->
+<div id="detail-view" class="view">
+  <div class="detail-topbar">
+    <button class="back-btn" onclick="goHome()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+      All Tools Nexus
+    </button>
+    <div class="detail-topbar-title">
+      <svg id="dTopIcon" viewBox="0 0 24 24" fill="currentColor"></svg>
+      <span id="dTopLabel">TOOL</span>
+    </div>
+    <div class="live-dot"></div>
+  </div>
+
+  <div class="detail-hero">
+    <div class="detail-eyebrow" id="dEyebrow">VIDEO & AUDIO</div>
+    <div class="detail-title display" id="dTitle">Downloader</div>
+    <div class="detail-desc" id="dDesc">Deskripsi tool.</div>
+  </div>
+
+  <div class="status-card card">
+    <div class="status-dot pending" id="dStatusDot"></div>
+    <div class="status-text">
+      <b id="dStatusTitle">Nexray API ·</b>
+      <span id="dStatusSub">Belum diuji · jalankan fitur</span>
+    </div>
+    <div class="status-refresh" onclick="resetStatus()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v5h5M20 20v-5h-5M4 9a8 8 0 0114-4.9M20 15a8 8 0 01-14 4.9"/></svg>
+    </div>
+  </div>
+
+  <div class="feature-line" id="dFeatures">Video MP4 multi-resolusi · Info lengkap.</div>
+
+  <div class="form-card card">
+    <div id="qualityWrap" style="display:none">
+      <div class="field-label">Kualitas</div>
+      <div class="quality-row" id="qualityRow"></div>
+    </div>
+    <div>
+      <input type="text" id="urlInput" class="url-input" placeholder="Tempel URL di sini...">
+    </div>
+    <button class="btn-main" id="submitBtn" onclick="runDownload()">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      <span id="submitLabel">Ambil Info</span>
+    </button>
+  </div>
+
+  <div class="msg err" id="errMsg"></div>
+  <div class="msg info" id="infoMsg"></div>
+
+  <div class="result-card card" id="resultCard">
+    <img class="result-thumb" id="resThumb" src="" alt="thumbnail" onerror="this.style.display='none'">
+    <div class="result-body">
+      <div class="result-title" id="resTitle">-</div>
+      <div class="result-meta">
+        <span id="resDuration" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><b></b></span>
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg><span id="resPlatform">-</span></span>
+      </div>
+      <div class="dl-list" id="dlList"></div>
+    </div>
+  </div>
+
+  <div style="padding:0 16px">
+    <a class="raw-toggle" onclick="toggleRaw()">Lihat respons API mentah</a>
+  </div>
+  <pre class="raw-json card" id="rawJson"></pre>
+
+  <div class="footer-note">All Tools Nexus · dibuat oleh Karl</div>
+</div>
+
+<script>
+/* ============================================================
+   1. KONFIGURASI TOOL — tambah/ubah tool cukup dari sini
+   ============================================================ */
+const ICONS = {
+  youtube: '<path d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.4.6A3 3 0 00.5 6.2 31 31 0 000 12a31 31 0 00.5 5.8 3 3 0 002.1 2.1c1.9.6 9.4.6 9.4.6s7.5 0 9.4-.6a3 3 0 002.1-2.1A31 31 0 0024 12a31 31 0 00-.5-5.8zM9.6 15.6V8.4L15.8 12l-6.2 3.6z"/>',
+  music: '<path d="M9 18V5l12-2v13M9 18a3 3 0 11-6 0 3 3 0 016 0zm12-2a3 3 0 11-6 0 3 3 0 016 0z"/>',
+  tiktok: '<path d="M16.6 5.8a4.3 4.3 0 01-3-3.8h-3.4v14.2a2.6 2.6 0 11-2.6-2.6c.3 0 .5 0 .8.1V10.3a6 6 0 00-.8 0 6 6 0 106 6V9.5a7.6 7.6 0 004.4 1.4V7.5c-.5 0-1-.1-1.4-.3z"/>',
+  box: '<path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5V13L3 8zm18 0v8l-9 5V13l9-5z"/>',
+  instagram: '<path d="M12 8.6a3.4 3.4 0 100 6.8 3.4 3.4 0 000-6.8zM12 2c-2.7 0-3.1 0-4.2.1-1 .1-1.7.2-2.4.5a4.8 4.8 0 00-1.7 1.1 4.8 4.8 0 00-1.1 1.7c-.3.7-.4 1.4-.5 2.4C2 8.9 2 9.3 2 12s0 3.1.1 4.2c.1 1 .2 1.7.5 2.4a4.8 4.8 0 001.1 1.7 4.8 4.8 0 001.7 1.1c.7.3 1.4.4 2.4.5 1.1.1 1.5.1 4.2.1s3.1 0 4.2-.1c1-.1 1.7-.2 2.4-.5a4.8 4.8 0 001.7-1.1 4.8 4.8 0 001.1-1.7c.3-.7.4-1.4.5-2.4.1-1.1.1-1.5.1-4.2s0-3.1-.1-4.2c-.1-1-.2-1.7-.5-2.4a4.8 4.8 0 00-1.1-1.7 4.8 4.8 0 00-1.7-1.1c-.7-.3-1.4-.4-2.4-.5C15.1 2 14.7 2 12 2zm0 3.8a5.6 5.6 0 110 11.2 5.6 5.6 0 010-11.2zm5.8-.2a1.3 1.3 0 11-2.6 0 1.3 1.3 0 012.6 0z"/>',
+  wrench: '<path d="M14.7 6.3a4 4 0 01-5.4 5.4L4 17l3 3 5.3-5.3a4 4 0 015.4-5.4l-3-3z"/>',
+  link: '<path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1.5 1.5M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1.5-1.5"/>'
+};
+
+/*
+  method: "get" — request dikirim sebagai GET ?param=value
+  paramName: nama query param untuk URL yang di-input user (rata-rata "url")
+  quality: null, atau { paramName, options:[{label,value}] } kalau tool punya pilihan kualitas
+  color: warna aksen kartu detail (dipakai di CSS var --dl-color)
+*/
+const TOOLS = {
+  ytmp4: {
+    group:'downloader', name:'YouTube MP4', desc:'Video MP4 multi-resolusi', icon:ICONS.youtube,
+    color:'#f43f5e', shadow:'rgba(244,63,94,0.55)',
+    eyebrow:'VIDEO & AUDIO', title:'YouTube Downloader',
+    longDesc:'Pilih video MP4 dengan tampilan hasil dan opsi resolusi yang lebih luas.',
+    features:'Video MP4 multi-resolusi · Info lengkap.',
+    endpoint:'https://api.nexray.eu.cc/downloader/ytmp4', method:'get', paramName:'url',
+    quality:{ paramName:'resolusi', options:[
+      {label:'1080p', value:'1080'},{label:'720p', value:'720'},{label:'480p', value:'480'},{label:'360p', value:'360'}
+    ]}
+  },
+  ytmp3: {
+    group:'downloader', name:'YouTube MP3', desc:'Audio MP3 dari YouTube', icon:ICONS.music,
+    color:'#a855f7', shadow:'rgba(168,85,247,0.55)',
+    eyebrow:'AUDIO', title:'YouTube MP3',
+    longDesc:'Ambil audio MP3 dari video YouTube langsung dari URL.',
+    features:'Audio MP3 · Info lengkap.',
+    endpoint:'https://api.nexray.eu.cc/downloader/ytmp3', method:'get', paramName:'url', quality:null
+  },
+  tiktok: {
+    group:'downloader', name:'TikTok', desc:'Video, foto & audio', icon:ICONS.tiktok,
+    color:'#22d3ee', shadow:'rgba(34,211,238,0.5)',
+    eyebrow:'VIDEO & FOTO', title:'TikTok Downloader',
+    longDesc:'Download video TikTok tanpa watermark, foto slide, dan audio original.',
+    features:'MP4/MP3/JPG · Tanpa watermark.',
+    endpoint:'https://app.siputzx.my.id/api/d/tiktok/v2', method:'get', paramName:'url', quality:null
+  },
+  terabox: {
+    group:'downloader', name:'Terabox Downloader', desc:'Ambil file dari link share Terabox', icon:ICONS.box,
+    color:'#6366f1', shadow:'rgba(99,102,241,0.5)',
+    eyebrow:'FILE', title:'Terabox Downloader',
+    longDesc:'Tempel link share Terabox untuk mengambil file dan link unduhan langsung.',
+    features:'Semua tipe file · Link langsung.',
+    endpoint:'https://api.nexray.eu.cc/downloader/terabox', method:'get', paramName:'url', quality:null
+  },
+  instagram: {
+    group:'downloader', name:'Instagram', desc:'Download video & foto', icon:ICONS.instagram,
+    color:'#ec4899', shadow:'rgba(236,72,153,0.5)',
+    eyebrow:'VIDEO & FOTO', title:'Instagram Downloader',
+    longDesc:'Endpoint belum disambungkan — tambahkan URL API Instagram-mu di objek TOOLS pada kode ini.',
+    features:'HD · Reels, Post, Story.',
+    endpoint:null, method:'get', paramName:'url', quality:null
+  },
+  img2url: {
+    group:'tools', name:'Img to URL', desc:'Upload gambar jadi link', icon:ICONS.link,
+    color:'#facc15', shadow:'rgba(250,204,21,0.4)',
+    eyebrow:'UTILITAS', title:'Img to URL',
+    longDesc:'Endpoint upload gambar belum disambungkan — tambahkan API uploader-mu di objek TOOLS.',
+    features:'Upload gambar · Dapat link.',
+    endpoint:null, method:'get', paramName:'url', quality:null
+  }
+};
+
+/* ============================================================
+   2. RENDER KARTU DI HOME
+   ============================================================ */
+function cardHTML(id, t){
+  const disabled = !t.endpoint;
+  return `
+  <button class="tool-card ${disabled?'disabled':''}" onclick="${disabled? `alert('Endpoint untuk ${t.name} belum diisi di kode.')` : `openTool('${id}')`}">
+    <div class="tool-icon" style="background:${t.color}">
+      <svg viewBox="0 0 24 24" fill="currentColor">${t.icon}</svg>
+    </div>
+    <div class="tool-name">${t.name}</div>
+    <div class="tool-desc">${t.desc}</div>
+    <div class="tool-foot">
+      <span class="tool-badge">${disabled? 'SOON' : 'READY'}</span>
+      <span class="tool-go"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 6l6 6-6 6"/></svg></span>
+    </div>
+  </button>`;
+}
+
+function renderGrids(){
+  const dl = document.getElementById('downloaderGrid');
+  const tl = document.getElementById('toolsGrid');
+  dl.innerHTML=''; tl.innerHTML='';
+  Object.entries(TOOLS).forEach(([id,t])=>{
+    const html = cardHTML(id,t);
+    if(t.group==='downloader') dl.insertAdjacentHTML('beforeend', html);
+    else tl.insertAdjacentHTML('beforeend', html);
+  });
+}
+renderGrids();
+
+/* ============================================================
+   3. TABS (All / Downloader / Tools)
+   ============================================================ */
+document.querySelectorAll('.tab').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.querySelectorAll('.section[data-group]').forEach(sec=>{
+      sec.style.display = (tab==='all' || sec.dataset.group===tab) ? '' : 'none';
+    });
+  });
+});
+
+/* ============================================================
+   4. INFO PERANGKAT (device / browser / baterai)
+   ============================================================ */
+(function deviceInfo(){
+  const ua = navigator.userAgent;
+  let device = 'Desktop';
+  if(/android/i.test(ua)) device='Android';
+  else if(/iphone|ipad|ipod/i.test(ua)) device='iOS';
+  document.getElementById('infoDevice').textContent = device;
+
+  let browser = 'Browser';
+  if(/edg\//i.test(ua)) browser='Edge';
+  else if(/opr\//i.test(ua)) browser='Opera';
+  else if(/chrome|crios/i.test(ua)) browser='Chrome';
+  else if(/firefox|fxios/i.test(ua)) browser='Firefox';
+  else if(/safari/i.test(ua)) browser='Safari';
+  document.getElementById('infoBrowser').textContent = browser;
+
+ if(navigator.getBattery){
+  navigator.getBattery().then(b=>{
+    const upd = ()=>{
+      const pct = Math.round(b.level * 100);
+
+      const battPct = document.getElementById('battPct');
+      const battFill = document.getElementById('battFill');
+
+      battPct.textContent = pct + '%';
+      battFill.style.width = pct + '%';
+
+      // Warna baterai
+      if (pct < 15) {
+        battFill.style.background = '#ef4444'; // Merah
+      } 
+      else if (pct <= 40) {
+        battFill.style.background = '#f97316'; // Oranye
+      } 
+      else {
+        battFill.style.background = '#22d67a'; // Hijau
+      }
+    };
+
+    upd();
+
+    b.addEventListener('levelchange', upd);
+  });
+} else {
+  document.getElementById('battPct').textContent = 'N/A';
+}
+})();
+
+/* ============================================================
+   5. MUSIC PLAYER (dekoratif — ganti audio.src dengan URL musikmu)
+   ============================================================ */
+const audio = new Audio("https://files.catbox.moe/rv9xl4.mp3"); // <-- isi audio.src = "https://.../lagu.mp3" kalau mau musik beneran
+let playing = false;
+document.getElementById('playPauseBtn').addEventListener('click', ()=>{
+  playing = !playing;
+  document.getElementById('player').classList.toggle('paused', !playing);
+  document.getElementById('playIcon').style.display = playing ? 'none':'block';
+  document.getElementById('pauseIcon').style.display = playing ? 'block':'none';
+  if(audio.src){ playing ? audio.play().catch(()=>{}) : audio.pause(); }
+});
+
+/* ============================================================
+   6. HERO BANNER (ganti URL gambar/anime sesuai keinginanmu)
+   ============================================================ */
+const HERO_IMAGE_URL = "https://files.catbox.moe/nc63iv.mp4"; 
+
+if (HERO_IMAGE_URL) {
+  const heroBanner = document.getElementById('heroBanner');
+
+  const video = document.createElement('video');
+  video.src = HERO_IMAGE_URL;
+  video.autoplay = true;
+  video.muted = true;
+  video.loop = true;
+  video.playsInline = true;
+
+  heroBanner.prepend(video);
+
+  heroBanner.style.background =
+    'linear-gradient(180deg, rgba(10,6,18,0.1), rgba(10,6,18,0.5))';
+} else {
+  document.getElementById('heroBanner').style.background =
+    'radial-gradient(circle at 30% 20%, #3b1a63, #0a0612 75%)';
+}
+
+/* ============================================================
+   7. NAVIGASI HOME <-> DETAIL
+   ============================================================ */
+let currentTool = null;
+
+function openTool(id){
+  const t = TOOLS[id];
+  if(!t) return;
+  currentTool = id;
+
+  document.documentElement.style.setProperty('--dl-color', t.color);
+  document.documentElement.style.setProperty('--dl-shadow', t.shadow);
+
+  document.getElementById('dTopIcon').innerHTML = t.icon;
+  document.getElementById('dTopLabel').textContent = t.name.toUpperCase();
+  document.getElementById('dEyebrow').textContent = t.eyebrow;
+  document.getElementById('dTitle').textContent = t.title;
+  document.getElementById('dDesc').textContent = t.longDesc;
+  document.getElementById('dFeatures').textContent = t.features;
+  document.getElementById('urlInput').value = '';
+  document.getElementById('urlInput').placeholder = `Tempel URL ${t.name}...`;
+
+  const qWrap = document.getElementById('qualityWrap');
+  const qRow = document.getElementById('qualityRow');
+  qRow.innerHTML = '';
+  if(t.quality){
+    qWrap.style.display = '';
+    t.quality.options.forEach((opt,i)=>{
+      const chip = document.createElement('button');
+      chip.type='button';
+      chip.className = 'quality-chip' + (i===0?' active':'');
+      chip.textContent = opt.label;
+      chip.dataset.value = opt.value;
+      chip.onclick = ()=>{
+        qRow.querySelectorAll('.quality-chip').forEach(c=>c.classList.remove('active'));
+        chip.classList.add('active');
+      };
+      qRow.appendChild(chip);
+    });
+  } else {
+    qWrap.style.display = 'none';
+  }
+
+  resetStatus();
+  hideResult();
+  document.getElementById('detail-view').scrollTop = 0;
+  window.scrollTo(0,0);
+
+  document.getElementById('home-view').classList.remove('active');
+  document.getElementById('detail-view').classList.add('active');
+}
+
+function goHome(){
+  document.getElementById('detail-view').classList.remove('active');
+  document.getElementById('home-view').classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function resetStatus(){
+  document.getElementById('dStatusDot').className = 'status-dot pending';
+  document.getElementById('dStatusSub').textContent = 'Belum diuji · jalankan fitur';
+}
+
+function hideResult(){
+  document.getElementById('resultCard').classList.remove('show');
+  document.getElementById('errMsg').classList.remove('show');
+  document.getElementById('infoMsg').classList.remove('show');
+  document.getElementById('rawJson').classList.remove('show');
+  document.getElementById('rawJson').textContent = '';
+}
+
+function toggleRaw(){
+  document.getElementById('rawJson').classList.toggle('show');
+}
+
+/* ============================================================
+   8. LOGIKA DOWNLOAD
+   ============================================================ */
+async function runDownload(){
+  const t = TOOLS[currentTool];
+  const urlVal = document.getElementById('urlInput').value.trim();
+  const errBox = document.getElementById('errMsg');
+  const infoBox = document.getElementById('infoMsg');
+  const btn = document.getElementById('submitBtn');
+  const label = document.getElementById('submitLabel');
+
+  hideResult();
+
+  if(!urlVal){
+    errBox.textContent = 'Tempel URL dulu sebelum lanjut.';
+    errBox.classList.add('show');
+    return;
+  }
+  if(!t.endpoint){
+    errBox.textContent = 'Endpoint tool ini belum diisi. Tambahkan di objek TOOLS pada kode.';
+    errBox.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+  label.innerHTML = '';
+  btn.querySelector('svg').style.display='none';
+  btn.insertBefore(Object.assign(document.createElement('span'),{className:'spinner',id:'spin'}), label);
+  label.textContent = 'Memproses...';
+
+  try{
+    const params = new URLSearchParams();
+    params.set(t.paramName, urlVal);
+    if(t.quality){
+      const activeChip = document.querySelector('#qualityRow .quality-chip.active');
+      if(activeChip) params.set(t.quality.paramName, activeChip.dataset.value);
+    }
+    const res = await fetch(`${t.endpoint}?${params.toString()}`);
+    const raw = await res.text();
+    let data;
+    try{ data = JSON.parse(raw); } catch(e){ throw new Error('Respons API bukan JSON valid.'); }
+
+    document.getElementById('rawJson').textContent = JSON.stringify(data, null, 2);
+
+    if(!res.ok){
+      throw new Error(data.message || data.error || `API mengembalikan status ${res.status}`);
+    }
+
+    renderResult(data, t);
+
+    document.getElementById('dStatusDot').className = 'status-dot ok';
+    document.getElementById('dStatusSub').textContent = 'Aktif · terakhir berhasil sekarang';
+
+  } catch(e){
+    errBox.textContent = 'Gagal mengambil data: ' + e.message + ' — cek tombol "Lihat respons API mentah" untuk detail.';
+    errBox.classList.add('show');
+    document.getElementById('dStatusDot').className = 'status-dot bad';
+    document.getElementById('dStatusSub').textContent = 'Gagal · coba lagi';
+  } finally {
+    btn.disabled = false;
+    const spin = document.getElementById('spin');
+    if(spin) spin.remove();
+    btn.querySelector('svg').style.display='';
+    label.textContent = 'Ambil Info';
+  }
+}
+
+/* Pencari fleksibel karena tiap API punya bentuk JSON berbeda-beda.
+   Menelusuri seluruh object untuk menemukan field url/thumbnail/judul/durasi. */
+function walk(obj, cb, path=''){
+  if(obj===null || obj===undefined) return;
+  if(typeof obj === 'object'){
+    Object.entries(obj).forEach(([k,v])=>{
+      if(typeof v === 'string' || typeof v === 'number'){
+        cb(k, v, path);
+      } else if(typeof v === 'object'){
+        walk(v, cb, path ? path+'.'+k : k);
+      }
+    });
+  }
+}
+
+function renderResult(data, t){
+  let thumb='', title='', duration='', platform=t.name;
+  const links = [];
+
+  walk(data, (key, val, path)=>{
+    const k = key.toLowerCase();
+    if(typeof val === 'string' && /^https?:\/\//i.test(val)){
+      if(/thumb|cover|image|poster/.test(k) && !thumb) thumb = val;
+      else if(/url|link|download|play|src|media/.test(k)){
+        links.push({ label: guessLabel(path, key), url: val });
+      }
+    } else if(typeof val === 'string'){
+      if(/title|caption|filename|name/.test(k) && !title && val.length < 200) title = val;
+      if(/duration|length/.test(k) && !duration) duration = val;
+    } else if(typeof val === 'number'){
+      if(/duration|length/.test(k) && !duration) duration = val + 's';
+    }
+  });
+
+  document.getElementById('resThumb').src = thumb;
+  document.getElementById('resThumb').style.display = thumb ? '' : 'none';
+  document.getElementById('resTitle').textContent = title || 'Media ditemukan';
+  document.getElementById('resPlatform').textContent = platform;
+  if(duration){
+    document.getElementById('resDuration').style.display='';
+    document.getElementById('resDuration').querySelector('b').textContent = duration;
+  } else {
+    document.getElementById('resDuration').style.display='none';
+  }
+
+  const dlList = document.getElementById('dlList');
+  dlList.innerHTML='';
+  const seen = new Set();
+  links.forEach(l=>{
+    if(seen.has(l.url)) return;
+    seen.add(l.url);
+    const row = document.createElement('div');
+    row.className='dl-item';
+    row.innerHTML = `
+      <span><svg class="file-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6"/></svg>${l.label}</span>
+      <a class="dl-btn" href="${l.url}" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>
+        Unduh
+      </a>`;
+    dlList.appendChild(row);
+  });
+
+  if(links.length===0){
+    document.getElementById('infoMsg').textContent = 'Data diterima tapi tidak ada link unduhan yang terbaca otomatis — cek respons mentah di bawah.';
+    document.getElementById('infoMsg').classList.add('show');
+  }
+
+  document.getElementById('resultCard').classList.add('show');
+}
+
+function guessLabel(path, key){
+  const s = (path+'.'+key).toLowerCase();
+  if(/audio|mp3/.test(s)) return 'Audio';
+  if(/hd/.test(s)) return 'Video HD';
+  if(/sd/.test(s)) return 'Video SD';
+  if(/1080/.test(s)) return 'Video 1080p';
+  if(/720/.test(s)) return 'Video 720p';
+  if(/480/.test(s)) return 'Video 480p';
+  if(/no.?water|nowm/.test(s)) return 'Tanpa Watermark';
+  if(/video/.test(s)) return 'Video';
+  if(/image|photo|foto/.test(s)) return 'Gambar';
+  return key;
+}
+</script>
+</body>
+</html>
