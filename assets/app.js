@@ -49,7 +49,7 @@ ROOT.innerHTML=`<div id="home-view" class="view active">
 <div id="detail-view" class="view">
   <div class="detail-topbar"><button class="back-btn" onclick="goHome()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>All Tools Kilzz</button><div class="detail-topbar-title"><svg id="dTopIcon" viewBox="0 0 24 24" fill="currentColor"></svg><span id="dTopLabel">TOOL</span></div><div class="live-dot"></div></div>
   <div class="detail-hero"><div class="detail-eyebrow" id="dEyebrow">VIDEO & AUDIO</div><div class="detail-title display" id="dTitle">Downloader</div><div class="detail-desc" id="dDesc">Deskripsi tool.</div></div>
-  <div class="status-card card"><div class="status-dot pending" id="dStatusDot"></div><div class="status-text"><b id="dStatusTitle">Nexray API ·</b><span id="dStatusSub">Belum diuji · jalankan fitur</span></div><div class="status-refresh" onclick="resetStatus()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v5h5M20 20v-5h-5M4 9a8 8 0 0114-4.9M20 15a8 8 0 01-14 4.9"/></svg></div></div>
+  <div class="status-card card"><div class="status-dot pending" id="dStatusDot"></div><div class="status-text"><b id="dStatusTitle">Private API </b><span id="dStatusSub">Belum diuji · jalankan fitur</span></div><div class="status-refresh" onclick="resetStatus()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v5h5M20 20v-5h-5M4 9a8 8 0 0114-4.9M20 15a8 8 0 01-14 4.9"/></svg></div></div>
   <div class="feature-line" id="dFeatures">Video MP4 multi-resolusi · Info lengkap.</div>
 
   <div class="form-card card">
