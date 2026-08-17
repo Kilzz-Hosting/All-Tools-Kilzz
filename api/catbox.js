@@ -50,6 +50,8 @@ export default async function handler(req, res) {
     const filename =
       req.headers['x-filename'] || 'image';
 
+        console.log('userhash exists:', !!process.env.CATBOX_USERHASH);
+
     const formData = new FormData();
 
     formData.append('reqtype', 'fileupload');
