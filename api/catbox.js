@@ -50,7 +50,7 @@ export default async function handler(req, res) {
     const filename =
       req.headers['x-filename'] || 'image';
 
-        console.log('userhash exists:', !!process.env.CATBOX_USERHASH);
+    console.log('userhash exists:', !!process.env.CATBOX_USERHASH);
 
     const formData = new FormData();
 
@@ -72,11 +72,17 @@ export default async function handler(req, res) {
       'https://catbox.moe/user/api.php',
       {
         method: 'POST',
+        headers: {
+          'User-Agent': 'Mozilla/5.0 (compatible; CatboxUploader/1.0)',
+        },
         body: formData,
       }
     );
 
     const result = (await catboxResponse.text()).trim();
+
+    console.log('catbox status:', catboxResponse.status);
+    console.log('catbox result:', result);
 
     if (!catboxResponse.ok) {
       return res.status(catboxResponse.status).json({
@@ -108,4 +114,4 @@ export default async function handler(req, res) {
       error: error?.message || 'Terjadi kesalahan saat upload ke Catbox.',
     });
   }
-      }
+}
