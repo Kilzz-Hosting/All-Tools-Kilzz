@@ -255,7 +255,7 @@ document.querySelectorAll('.tab').forEach(btn=>btn.addEventListener('click',()=>
 /* ============================================================
    MUSIC PLAYER + HERO VIDEO
    ============================================================ */
-const audio=new Audio("https://files.catbox.moe/rv9xl4.mp3");audio.preload='none';audio.autoplay=false;let playing=false;
+const audio=new Audio("https://files.catbox.moe/2cxawy");audio.preload='none';audio.autoplay=false;let playing=false;
 const player=document.getElementById('player'),playPauseBtn=document.getElementById('playPauseBtn'),playIcon=document.getElementById('playIcon'),pauseIcon=document.getElementById('pauseIcon');
 function updatePlayer(){player.classList.toggle('paused',!playing);playIcon.style.display=playing?'none':'block';pauseIcon.style.display=playing?'block':'none'}
 playPauseBtn.addEventListener('click',async()=>{if(audio.paused){try{await audio.play();playing=true}catch(e){playing=false}}else{audio.pause();playing=false}updatePlayer()});
