@@ -137,6 +137,11 @@ a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
 .spinner{width:15px;height:15px;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .msg{margin:12px 12px 0;padding:11px 12px;border-radius:var(--radius-md);font-size:11.5px;line-height:1.5;display:none}.msg.show{display:block}.msg.err{background:rgba(251,113,133,.12);border:1px solid rgba(251,113,133,.35);color:#ffc4cd}.msg.info{background:rgba(168,85,247,.1);border:1px solid var(--border);color:var(--text-dim)}
 .result-card{margin:14px 12px 0;overflow:hidden;display:none}.result-card.show{display:block}.result-thumb{width:100%;aspect-ratio:16/9;object-fit:cover;background:#1a0f2e;display:block}.result-body{padding:13px}.result-title{font-size:13px;font-weight:700;line-height:1.4}.result-meta{display:flex;gap:12px;margin-top:7px;font-size:10px;color:var(--text-faint)}.result-meta span{display:flex;align-items:center;gap:4px}.result-meta svg{width:11px;height:11px}.dl-list{display:flex;flex-direction:column;gap:7px;margin-top:12px}.dl-item{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 12px;border-radius:var(--radius-sm);background:var(--surface-strong);border:1px solid var(--border-soft);font-size:11.5px;font-weight:600}.dl-item span{display:flex;align-items:center;gap:7px;color:var(--text);min-width:0}.dl-item svg.file-ic{width:14px;color:var(--dl-color,var(--violet-1));flex-shrink:0}.dl-btn{display:flex;align-items:center;gap:4px;padding:6px 11px;border-radius:var(--radius-pill);background:linear-gradient(135deg,var(--dl-color,var(--violet-2)),var(--pink));color:#fff;font-size:10.5px;font-weight:700;flex-shrink:0}.dl-btn svg{width:11px;height:11px}
+.search-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-sm);background:var(--surface-strong);border:1px solid var(--border-soft);margin-bottom:8px}
+.search-item img{width:44px;height:44px;border-radius:8px;object-fit:cover;flex-shrink:0;background:#1a0f2e}
+.search-item .si-info{flex:1;min-width:0}
+.search-item .si-title{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.search-item .si-sub{font-size:10.5px;color:var(--text-faint);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:2px}
 .raw-toggle{margin:12px 12px 35px;font-size:10px;color:var(--text-faint);text-decoration:underline;display:inline-block}.raw-json{display:none;margin:7px 12px 35px;padding:11px;font-size:9px;white-space:pre-wrap;word-break:break-all;color:var(--text-faint);max-height:220px;overflow:auto}.raw-json.show{display:block}.footer-note{text-align:center;font-size:9.5px;color:var(--text-faint);padding:22px 12px 4px}
 
 @media(max-width:360px){
@@ -226,7 +231,17 @@ a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
   </div>
 
   <div class="msg err" id="errMsg"></div><div class="msg info" id="infoMsg"></div>
-  <div class="result-card card" id="resultCard"><img class="result-thumb" id="resThumb" src="" alt="thumbnail" onerror="this.style.display='none'"><div class="result-body"><div class="result-title" id="resTitle">-</div><div class="result-meta"><span id="resDuration" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><b></b></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg><span id="resPlatform">-</span></span></div><div class="dl-list" id="dlList"></div></div></div>
+  <div class="result-card card" id="resultCard">
+    <div id="singleResult">
+      <img class="result-thumb" id="resThumb" src="" alt="thumbnail" onerror="this.style.display='none'">
+      <div class="result-body">
+        <div class="result-title" id="resTitle">-</div>
+        <div class="result-meta"><span id="resDuration" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><b></b></span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg><span id="resPlatform">-</span></span></div>
+        <div class="dl-list" id="dlList"></div>
+      </div>
+    </div>
+    <div id="searchResultList" class="result-body" style="display:none"></div>
+  </div>
   <div style="padding:0 12px"><a class="raw-toggle" onclick="toggleRaw()">Lihat respons API mentah</a></div><pre class="raw-json card" id="rawJson"></pre>
   <div class="footer-note">All Tools Kilzz · dibuat oleh Kilzz</div>
 </div>
@@ -242,17 +257,22 @@ box:'<path d="M21 8l-9-5-9 5 9 5 9-5zM3 8v8l9 5V13L3 8zm18 0v8l-9 5V13l9-5z"/>',
 instagram:'<path d="M12 8.6a3.4 3.4 0 100 6.8 3.4 3.4 0 000-6.8zM12 2c-2.7 0-3.1 0-4.2.1-1 .1-1.7.2-2.4.5a4.8 4.8 0 00-1.7 1.1 4.8 4.8 0 00-1.1 1.7c-.3.7-.4 1.4-.5 2.4C2 8.9 2 9.3 2 12s0 3.1.1 4.2c.1 1 .2 1.7.5 2.4a4.8 4.8 0 001.1 1.7 4.8 4.8 0 001.7 1.1c.7.3 1.4.4 2.4.5 1.1.1 1.5.1 4.2.1s3.1 0 4.2-.1c1-.1 1.7-.2 2.4-.5a4.8 4.8 0 001.7-1.1 4.8 4.8 0 001.1-1.7c.3-.7.4-1.4.5-2.4.1-1.1.1-1.5.1-4.2s0-3.1-.1-4.2c-.1-1-.2-1.7-.5-2.4a4.8 4.8 0 00-1.1-1.7 4.8 4.8 0 00-1.7-1.1c-.7-.3-1.4-.4-2.4-.5C15.1 2 14.7 2 12 2zm0 3.8a5.6 5.6 0 110 11.2 5.6 5.6 0 010-11.2zm5.8-.2a1.3 1.3 0 11-2.6 0 1.3 1.3 0 012.6 0z"/>',
 link:'<path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1.5 1.5M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1.5-1.5"/>',
 spotify:'<path d="M12 2a10 10 0 100 20 10 10 0 000-20zm4.6 14.6a.6.6 0 01-.83.2c-2.3-1.4-5.2-1.7-8.6-.9a.6.6 0 11-.27-1.17c3.7-.85 6.9-.48 9.5 1.1a.6.6 0 01.2.76zm1.2-2.7a.75.75 0 01-1.03.25c-2.6-1.6-6.6-2.07-9.7-1.13a.75.75 0 11-.44-1.44c3.5-1.06 7.9-.54 10.9 1.3a.75.75 0 01.27 1.02zm.1-2.8C15.1 9.1 9.9 8.9 6.9 9.8a.9.9 0 11-.5-1.73c3.5-1.05 9.2-.8 12.8 1.4a.9.9 0 11-.9 1.55z"/>',
-upload:'<path d="M12 3l5 5h-3v6h-4V8H7l5-5zM4 15h2v4h12v-4h2v6H4v-6z"/>'
+upload:'<path d="M12 3l5 5h-3v6h-4V8H7l5-5zM4 15h2v4h12v-4h2v6H4v-6z"/>',
+search:'<path d="M10 3a7 7 0 104.9 12l5 5 1.4-1.4-5-5A7 7 0 0010 3zm0 2a5 5 0 110 10 5 5 0 010-10z"/>'
 };
+
+const API_KEY = 'sylva-XgcZHu2T'; // apikey Sylvatica — dipakai semua tool yang useApiKey:true
 
 /* ============================================================
    TOOL CONFIG
    - inputType: 'url' (default) atau 'file'
+   - paramName: nama query param untuk teks yang diinput user (default 'url')
+   - useApiKey: true -> otomatis nambah &apikey=API_KEY di request
+   - resultType: 'single' (default, 1 hasil) atau 'list' (banyak hasil, misal search)
    - formats: dipakai kalau satu tool punya beberapa pilihan format
      (contoh: YouTube MP4/MP3) — masing-masing format bisa punya
-     endpoint & quality sendiri-sendiri.
-   - endpoint:null artinya belum disambungkan ke API (tombol jalan,
-     tapi kasih tau ke user kalau belum ada API-nya).
+     endpoint, paramName, quality & useApiKey sendiri-sendiri.
+   - endpoint:null artinya belum disambungkan ke API.
    ============================================================ */
 const TOOLS={
 
@@ -266,14 +286,14 @@ const TOOLS={
     defaultFormat:'mp4',
     formats:{
       mp4:{
-        label:'MP4', endpoint:'https://api.nexray.eu.cc/downloader/ytmp4', paramName:'url',
+        label:'MP4', endpoint:'https://sylvatica.my.id/api/download/ytmp4', paramName:'url', useApiKey:true,
         quality:{ paramName:'resolusi', options:[
           {label:'1080p', value:'1080'},{label:'720p', value:'720'},
           {label:'480p', value:'480'},{label:'360p', value:'360'}
         ]}
       },
       mp3:{
-        label:'MP3', endpoint:'https://api.nexray.eu.cc/downloader/ytmp3', paramName:'url', quality:null
+        label:'MP3', endpoint:'https://sylvatica.my.id/api/download/ytmp3', paramName:'url', useApiKey:true, quality:null
       }
     }
   },
@@ -285,7 +305,7 @@ const TOOLS={
     longDesc:'Download video TikTok tanpa watermark, foto slide, dan audio original.',
     features:'MP4/MP3/JPG · Tanpa watermark.',
     inputType:'url',
-    endpoint:'https://app.siputzx.my.id/api/d/tiktok/v2', paramName:'url', quality:null
+    endpoint:'https://sylvatica.my.id/api/download/tiktok', paramName:'url', useApiKey:true, quality:null
   },
 
   terabox:{
@@ -302,10 +322,10 @@ const TOOLS={
     group:'downloader', name:'Instagram', desc:'Download video & foto', icon:ICONS.instagram,
     iconBg:'linear-gradient(135deg,#f9ce34,#ee2a7b,#6228d7)', color:'#ee2a7b', shadow:'rgba(238,42,123,.45)',
     eyebrow:'VIDEO & FOTO', title:'Instagram Downloader',
-    longDesc:'Endpoint belum disambungkan — tambahkan URL API Instagram-mu di objek TOOLS pada kode ini.',
+    longDesc:'Tempel link Instagram (Reels, Post, atau Story) untuk mengambil video/foto-nya.',
     features:'HD · Reels, Post, Story.',
     inputType:'url',
-    endpoint:null, paramName:'url', quality:null
+    endpoint:'https://sylvatica.my.id/api/download/instagram', paramName:'url', useApiKey:true, quality:null
   },
 
   spotify:{
@@ -318,17 +338,33 @@ const TOOLS={
     endpoint:'https://api.nexray.eu.cc/downloader/spotify', paramName:'url', quality:null
   },
 
+  spotifySearch:{
+    group:'downloader', name:'Spotify Search', desc:'Cari judul lagu/artis', icon:ICONS.search,
+    iconBg:'#1DB954', color:'#1DB954', shadow:'rgba(29,185,84,.45)',
+    eyebrow:'PENCARIAN', title:'Spotify Search',
+    longDesc:'Ketik judul lagu atau nama artis untuk mencari track di Spotify.',
+    features:'Pencarian judul/artis · Hasil banyak track.',
+    inputType:'url', paramName:'q', placeholder:'Cari judul lagu atau artis...', actionLabel:'Cari Lagu',
+    resultType:'list',
+    endpoint:'https://sylvatica.my.id/api/search/spotify', useApiKey:true, quality:null
+  },
+
   catbox:{
-    group:'tools', name:'Catbox', desc:'Upload gambar jadi link', icon:ICONS.upload,
-    iconBg:'#fb923c', color:'#fb923c', shadow:'rgba(251,146,60,.45)',
-    eyebrow:'UTILITAS', title:'Catbox Uploader',
-    longDesc:'Upload gambar dan dapatkan link langsung. Fungsi UI sudah siap — endpoint upload menyusul.',
-    features:'Upload gambar · Dapat link.',
-    inputType:'file',
-    actionLabel:'Upload ke Catbox',
-    endpoint:null // TODO: isi endpoint upload Catbox di sini kalau sudah siap
-  }
-};
+  group:'tools',
+  name:'Catbox',
+  desc:'Upload gambar jadi link',
+  icon:ICONS.upload,
+  iconBg:'#fb923c',
+  color:'#fb923c',
+  shadow:'rgba(251,146,60,.45)',
+  eyebrow:'IMG2URL',
+  title:'Catbox Img2URL',
+  longDesc:'Upload gambar ke Catbox dan dapatkan direct URL yang bisa langsung digunakan.',
+  features:'JPG · PNG · GIF · WebP · Direct URL.',
+  inputType:'file',
+  actionLabel:'Upload ke Catbox',
+  endpoint:'/api/catbox'
+}
 
 /* ============================================================
    RENDER GRID DI HOME
@@ -444,7 +480,7 @@ function openTool(id){
   document.getElementById('inputWrapUrl').style.display = isFile ? 'none' : '';
   document.getElementById('inputWrapFile').style.display = isFile ? '' : 'none';
   document.getElementById('urlInput').value='';
-  document.getElementById('urlInput').placeholder=`Tempel URL ${t.name}...`;
+  document.getElementById('urlInput').placeholder = t.placeholder || `Tempel URL ${t.name}...`;
   document.getElementById('fileInput').value='';
   document.getElementById('fileLabelText').textContent='Pilih gambar untuk diupload...';
   document.getElementById('fileLabelBox').classList.remove('has-file');
@@ -472,13 +508,42 @@ function hideResult(){
   document.getElementById('infoMsg').classList.remove('show');
   document.getElementById('rawJson').classList.remove('show');
   document.getElementById('rawJson').textContent='';
+  document.getElementById('singleResult').style.display='';
+  document.getElementById('searchResultList').style.display='none';
+  document.getElementById('searchResultList').innerHTML='';
 }
 function toggleRaw(){ document.getElementById('rawJson').classList.toggle('show'); }
 
 function onFileChosen(input){
-  chosenFile = input.files && input.files[0] ? input.files[0] : null;
-  document.getElementById('fileLabelText').textContent = chosenFile ? chosenFile.name : 'Pilih gambar untuk diupload...';
-  document.getElementById('fileLabelBox').classList.toggle('has-file', !!chosenFile);
+
+  chosenFile =
+    input.files && input.files[0]
+      ? input.files[0]
+      : null;
+
+  const text =
+    document.getElementById('fileLabelText');
+
+  const box =
+    document.getElementById('fileLabelBox');
+
+  if(chosenFile){
+
+    const sizeMB =
+      (chosenFile.size / 1024 / 1024).toFixed(2);
+
+    text.textContent =
+      `${chosenFile.name} · ${sizeMB} MB`;
+
+    box.classList.add('has-file');
+
+  }else{
+
+    text.textContent =
+      'Pilih gambar untuk diupload...';
+
+    box.classList.remove('has-file');
+  }
 }
 
 /* ============================================================
@@ -496,31 +561,33 @@ async function runDownload(t){
   const btn=document.getElementById('submitBtn'), label=document.getElementById('submitLabel');
   hideResult();
 
-  if(!urlVal){ err.textContent='Tempel URL dulu sebelum lanjut.'; err.classList.add('show'); return; }
+  if(!urlVal){ err.textContent = t.paramName==='q' ? 'Ketik dulu kata kuncinya sebelum lanjut.' : 'Tempel URL dulu sebelum lanjut.'; err.classList.add('show'); return; }
 
   // tentukan endpoint & param aktif (beda kalau tool punya 'formats')
-  let endpoint, paramName, qualityConf;
+  let endpoint, paramName, qualityConf, useApiKey;
   if(t.formats){
     const f=t.formats[currentFormat];
-    endpoint=f.endpoint; paramName=f.paramName; qualityConf=f.quality;
+    endpoint=f.endpoint; paramName=f.paramName; qualityConf=f.quality; useApiKey=f.useApiKey;
   } else {
-    endpoint=t.endpoint; paramName=t.paramName; qualityConf=t.quality;
+    endpoint=t.endpoint; paramName=t.paramName||'url'; qualityConf=t.quality; useApiKey=t.useApiKey;
   }
 
   if(!endpoint){ err.textContent='Endpoint tool ini belum diisi. Tambahkan di objek TOOLS pada kode.'; err.classList.add('show'); return; }
 
   btn.disabled=true; label.innerHTML=''; btn.querySelector('svg').style.display='none';
   btn.insertBefore(Object.assign(document.createElement('span'),{className:'spinner',id:'spin'}),label);
-  label.textContent='Memproses...';
+  label.textContent = paramName==='q' ? 'Mencari...' : 'Memproses...';
 
   try{
-    // urutan param dijaga: url dulu, baru resolusi/kualitas — sesuai kebutuhan API
+    // urutan param dijaga: url/q dulu, lalu resolusi/kualitas, apikey paling akhir
     const p=new URLSearchParams();
     p.set(paramName, urlVal);
     if(qualityConf){
       const c=document.querySelector('#qualityRow .quality-chip.active');
       if(c) p.set(qualityConf.paramName, c.dataset.value);
     }
+    if(useApiKey) p.set('apikey', API_KEY);
+
     const res=await fetch(`${endpoint}?${p.toString()}`);
     const raw=await res.text();
     let data; try{ data=JSON.parse(raw); } catch(e){ throw new Error('Respons API bukan JSON valid.'); }
@@ -528,7 +595,9 @@ async function runDownload(t){
     document.getElementById('rawJson').textContent=JSON.stringify(data,null,2);
     if(!res.ok) throw new Error(data.message||data.error||`API mengembalikan status ${res.status}`);
 
-    renderResult(data, t);
+    if(t.resultType==='list') renderSearchResults(data, t);
+    else renderResult(data, t);
+
     document.getElementById('dStatusDot').className='status-dot ok';
     document.getElementById('dStatusSub').textContent='Aktif · terakhir berhasil sekarang';
   } catch(e){
@@ -545,42 +614,290 @@ async function runDownload(t){
 /* Upload (Catbox) — fungsi & UI sudah jalan, tinggal isi ENDPOINT
    kalau kamu sudah siap sambungkan API upload-nya. */
 async function uploadFile(t){
-  const err=document.getElementById('errMsg'), btn=document.getElementById('submitBtn'), label=document.getElementById('submitLabel');
+  const err = document.getElementById('errMsg');
+  const info = document.getElementById('infoMsg');
+  const btn = document.getElementById('submitBtn');
+  const label = document.getElementById('submitLabel');
+
   hideResult();
 
-  if(!chosenFile){ err.textContent='Pilih gambar dulu sebelum upload.'; err.classList.add('show'); return; }
-
-  if(!t.endpoint){
-    err.textContent='Endpoint upload Catbox belum diisi. Fungsi & UI sudah siap — tambahkan endpoint di objek TOOLS lalu edit fungsi uploadFile() untuk kirim file-nya.';
+  if(!chosenFile){
+    err.textContent = 'Pilih gambar dulu sebelum upload.';
     err.classList.add('show');
-    document.getElementById('dStatusDot').className='status-dot pending';
-    document.getElementById('dStatusSub').textContent='Menunggu endpoint API';
     return;
   }
 
-  btn.disabled=true; label.innerHTML=''; btn.querySelector('svg').style.display='none';
-  btn.insertBefore(Object.assign(document.createElement('span'),{className:'spinner',id:'spin'}),label);
-  label.textContent='Mengupload...';
+  if(!chosenFile.type.startsWith('image/')){
+    err.textContent = 'File yang dipilih harus berupa gambar.';
+    err.classList.add('show');
+    return;
+  }
+
+  const maxSize = 4 * 1024 * 1024;
+
+  if(chosenFile.size > maxSize){
+    err.textContent =
+      'Ukuran gambar terlalu besar. Maksimal 4 MB.';
+    err.classList.add('show');
+    return;
+  }
+
+  btn.disabled = true;
+
+  const oldIcon = btn.querySelector('svg');
+
+  if(oldIcon){
+    oldIcon.style.display = 'none';
+  }
+
+  const spinner = document.createElement('span');
+  spinner.className = 'spinner';
+  spinner.id = 'spin';
+
+  btn.insertBefore(spinner, label);
+
+  label.textContent = 'Mengupload...';
 
   try{
-    // Contoh kalau nanti API-nya nerima multipart/form-data:
-    // const fd = new FormData();
-    // fd.append('file', chosenFile);
-    // const res = await fetch(t.endpoint, { method:'POST', body: fd });
-    // const data = await res.json();
-    // ... lalu render hasil link-nya di sini
-    throw new Error('Belum diimplementasi — endpoint sudah diisi tapi logic kirim file belum ditulis.');
-  } catch(e){
-    err.textContent='Gagal upload: '+e.message;
+
+    /*
+      File dikirim langsung sebagai body ke
+      Vercel Function.
+
+      Userhash TIDAK dikirim dari browser.
+      Userhash disimpan di Environment Variable Vercel.
+    */
+    const response = await fetch(t.endpoint, {
+      method: 'POST',
+
+      headers: {
+        'Content-Type': chosenFile.type,
+        'X-Filename': encodeURIComponent(chosenFile.name)
+      },
+
+      body: chosenFile
+    });
+
+    const raw = await response.text();
+
+    let data;
+
+    try{
+      data = JSON.parse(raw);
+    }catch{
+      throw new Error(
+        raw || `Server mengembalikan status ${response.status}`
+      );
+    }
+
+    document.getElementById('rawJson').textContent =
+      JSON.stringify(data, null, 2);
+
+    if(!response.ok || !data.ok){
+      throw new Error(
+        data.error ||
+        `Upload gagal dengan status ${response.status}`
+      );
+    }
+
+    if(!data.url){
+      throw new Error(
+        'Upload berhasil tetapi Catbox tidak memberikan URL.'
+      );
+    }
+
+    renderCatboxResult(data);
+
+    document.getElementById('dStatusDot').className =
+      'status-dot ok';
+
+    document.getElementById('dStatusSub').textContent =
+      'Aktif · gambar berhasil diupload';
+
+    info.textContent =
+      'Gambar berhasil diupload ke Catbox.';
+
+    info.classList.add('show');
+
+  }catch(error){
+
+    err.textContent =
+      'Gagal upload: ' + error.message;
+
     err.classList.add('show');
-  } finally {
-    btn.disabled=false; const s=document.getElementById('spin'); if(s) s.remove();
-    btn.querySelector('svg').style.display=''; label.textContent=t.actionLabel||'Upload';
+
+    document.getElementById('dStatusDot').className =
+      'status-dot bad';
+
+    document.getElementById('dStatusSub').textContent =
+      'Gagal · coba lagi';
+
+  }finally{
+
+    btn.disabled = false;
+
+    const spin = document.getElementById('spin');
+
+    if(spin){
+      spin.remove();
+    }
+
+    if(oldIcon){
+      oldIcon.style.display = '';
+    }
+
+    label.textContent =
+      t.actionLabel || 'Upload';
+
   }
 }
 
+function renderCatboxResult(data){
+
+  const resultCard =
+    document.getElementById('resultCard');
+
+  const single =
+    document.getElementById('singleResult');
+
+  const search =
+    document.getElementById('searchResultList');
+
+  single.style.display = '';
+  search.style.display = 'none';
+
+  const thumb =
+    document.getElementById('resThumb');
+
+  thumb.src = data.url;
+  thumb.style.display = '';
+
+  document.getElementById('resTitle').textContent =
+    data.filename || 'Gambar berhasil diupload';
+
+  document.getElementById('resPlatform').textContent =
+    'Catbox';
+
+  document.getElementById('resDuration').style.display =
+    'none';
+
+  const list =
+    document.getElementById('dlList');
+
+  list.innerHTML = '';
+
+  const row =
+    document.createElement('div');
+
+  row.className = 'dl-item';
+
+  row.innerHTML = `
+    <span>
+      <svg
+        class="file-ic"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2">
+        <path d="M10 13a5 5 0 007 0l3-3a5 5 0 00-7-7l-1.5 1.5"/>
+        <path d="M14 11a5 5 0 00-7 0l-3 3a5 5 0 007 7l1.5-1.5"/>
+      </svg>
+      Direct URL
+    </span>
+
+    <a
+      class="dl-btn"
+      href="${escapeHtml(data.url)}"
+      target="_blank"
+      rel="noopener">
+      <svg
+        viewBox="0 0 24 24"
+        fill="currentColor">
+        <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/>
+      </svg>
+      Buka
+    </a>
+  `;
+
+  list.appendChild(row);
+
+  const urlBox =
+    document.createElement('div');
+
+  urlBox.style.cssText = `
+    margin-top:8px;
+    display:flex;
+    gap:7px;
+    width:100%;
+  `;
+
+  urlBox.innerHTML = `
+    <input
+      id="catboxUrlOutput"
+      class="url-input"
+      value="${escapeHtml(data.url)}"
+      readonly
+      style="flex:1;min-width:0;"
+    >
+
+    <button
+      type="button"
+      class="dl-btn"
+      onclick="copyCatboxUrl()">
+      Copy
+    </button>
+  `;
+
+  list.appendChild(urlBox);
+
+  resultCard.classList.add('show');
+}
+
+function escapeHtml(value){
+
+  return String(value)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;')
+    .replace(/'/g,'&#039;');
+
+}
+
+async function copyCatboxUrl(){
+
+  const input =
+    document.getElementById('catboxUrlOutput');
+
+  if(!input) return;
+
+  const url = input.value;
+
+  try{
+
+    await navigator.clipboard.writeText(url);
+
+  }catch{
+
+    input.focus();
+    input.select();
+    input.setSelectionRange(0, 99999);
+
+    document.execCommand('copy');
+  }
+
+  const info =
+    document.getElementById('infoMsg');
+
+  info.textContent =
+    'URL Catbox berhasil disalin.';
+
+  info.classList.add('show');
+
+}
+
 /* ============================================================
-   PARSER RESPON — otomatis cari url/thumbnail/judul di JSON apa pun
+   PARSER RESPON (single) — otomatis cari url/thumbnail/judul
    ============================================================ */
 function walk(obj,cb,path=''){
   if(obj==null) return;
@@ -591,12 +908,21 @@ function walk(obj,cb,path=''){
 }
 
 function renderResult(data,t){
-  let thumb='',title='',duration='',platform=t.name; const links=[];
+  document.getElementById('singleResult').style.display='';
+  document.getElementById('searchResultList').style.display='none';
+
+  let thumb='',title='',duration='',platform=t.name; const links=[]; const seenUrl=new Set();
   walk(data,(key,val,path)=>{
     const k=key.toLowerCase();
+    // gabung path+key: item di dalam array (mis. downloads.nowm[0]) cuma punya index angka
+    // sebagai key sendiri, jadi harus ikut cek nama parent-nya biar kebaca
+    const combined=(path+'.'+key).toLowerCase();
     if(typeof val==='string' && /^https?:\/\//i.test(val)){
-      if(/thumb|cover|image|poster/.test(k) && !thumb) thumb=val;
-      else if(/url|link|download|play|src|media/.test(k)) links.push({label:guessLabel(path,key),url:val});
+      if(/thumb|cover|image|poster/.test(combined) && !thumb) thumb=val;
+      else if(/url|link|download|play|src|media|mp3|audio|nowm|slides?/.test(combined) && !seenUrl.has(val)){
+        seenUrl.add(val);
+        links.push({label:guessLabel(path,key),url:val});
+      }
     } else if(typeof val==='string'){
       if(/title|caption|filename|name/.test(k) && !title && val.length<200) title=val;
       if(/duration|length/.test(k) && !duration) duration=val;
@@ -622,6 +948,77 @@ function renderResult(data,t){
     document.getElementById('infoMsg').textContent='Data diterima tapi tidak ada link unduhan yang terbaca otomatis — cek respons mentah di bawah.';
     document.getElementById('infoMsg').classList.add('show');
   }
+  document.getElementById('resultCard').classList.add('show');
+}
+
+/* ============================================================
+   PARSER RESPON (list) — untuk hasil pencarian (Spotify Search dll)
+   ============================================================ */
+function findResultArray(obj){
+  // cari array of objects pertama yang "kelihatan" seperti daftar hasil
+  // (item-nya punya field title/name/track)
+  let best=null;
+  function scan(o){
+    if(Array.isArray(o)){
+      if(o.length && typeof o[0]==='object' && o[0]!==null){
+        const keys=Object.keys(o[0]).join(' ').toLowerCase();
+        if(/title|name|track|judul/.test(keys) && !best) best=o;
+      }
+      o.forEach(scan);
+    } else if(o && typeof o==='object'){
+      Object.values(o).forEach(scan);
+    }
+  }
+  scan(obj);
+  return best;
+}
+
+function extractItemLink(item){
+  let link='';
+  walk(item,(k,v)=>{
+    if(!link && typeof v==='string' && /^https?:\/\//i.test(v) && /url|link|download|play|preview|audio|src/i.test(k)) link=v;
+  });
+  return link;
+}
+function extractItemField(item, pattern){
+  let out='';
+  walk(item,(k,v)=>{
+    if(!out && typeof v==='string' && pattern.test(k) && v.length<200) out=v;
+  });
+  return out;
+}
+
+function renderSearchResults(data,t){
+  document.getElementById('singleResult').style.display='none';
+  const wrap=document.getElementById('searchResultList');
+  wrap.style.display=''; wrap.innerHTML='';
+
+  const items=findResultArray(data);
+  if(!items || !items.length){
+    document.getElementById('infoMsg').textContent='Tidak ada hasil yang terbaca otomatis dari respons — cek "Lihat respons API mentah" di bawah.';
+    document.getElementById('infoMsg').classList.add('show');
+    document.getElementById('resultCard').classList.add('show');
+    return;
+  }
+
+  items.slice(0,20).forEach(item=>{
+    const title = extractItemField(item, /title|name|track|judul/i) || 'Tanpa judul';
+    const subtitle = extractItemField(item, /artist|singer|channel|uploader|author/i);
+    const thumb = extractItemField(item, /thumb|cover|image|artwork|poster/i);
+    const link = extractItemLink(item);
+
+    const row=document.createElement('div'); row.className='search-item';
+    row.innerHTML = `
+      <img src="${thumb}" alt="" onerror="this.style.display='none'">
+      <div class="si-info">
+        <div class="si-title">${title}</div>
+        ${subtitle?`<div class="si-sub">${subtitle}</div>`:''}
+      </div>
+      ${link ? `<a class="dl-btn" href="${link}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16"/></svg>Buka</a>` : ''}
+    `;
+    wrap.appendChild(row);
+  });
+
   document.getElementById('resultCard').classList.add('show');
 }
 
