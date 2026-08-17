@@ -35,10 +35,11 @@ export default async function handler(req, res) {
   try {
     const contentType = req.headers['content-type'] || '';
 
-    if (!contentType.startsWith('image/')) {
+    const allowedPrefixes = ['image/', 'video/', 'audio/'];
+    if (!allowedPrefixes.some((p) => contentType.startsWith(p))) {
       return res.status(400).json({
         ok: false,
-        error: 'Request harus berupa file gambar.',
+        error: 'Request harus berupa file gambar, video, atau audio.',
       });
     }
 
@@ -51,7 +52,7 @@ export default async function handler(req, res) {
     if (!buffer.length) {
       return res.status(400).json({
         ok: false,
-        error: 'File gambar kosong.',
+        error: 'File kosong.',
       });
     }
 
@@ -59,14 +60,12 @@ export default async function handler(req, res) {
     if (buffer.length > maxSize) {
       return res.status(413).json({
         ok: false,
-        error: 'Ukuran gambar terlalu besar. Maksimal 4 MB untuk upload melalui Vercel Function.',
+        error: 'Ukuran file terlalu besar. Maksimal 4 MB untuk upload melalui Vercel Function.',
       });
     }
 
-    const filename = req.headers['x-filename'] || 'image.jpg';
+    const filename = req.headers['x-filename'] || 'file';
     const userhash = (process.env.CATBOX_USERHASH || '').trim();
-
-    console.log('userhash length:', userhash.length);
 
     const { body, boundary } = buildMultipartBody(
       { reqtype: 'fileupload', userhash },
@@ -86,9 +85,6 @@ export default async function handler(req, res) {
     });
 
     const result = (await catboxResponse.text()).trim();
-
-    console.log('catbox status:', catboxResponse.status);
-    console.log('catbox result:', result);
 
     if (!catboxResponse.ok) {
       return res.status(catboxResponse.status).json({
