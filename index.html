@@ -220,9 +220,9 @@ a{color:inherit;text-decoration:none}button{font-family:inherit;cursor:pointer}
     <div id="inputWrapFile" style="display:none">
       <label class="file-label" id="fileLabelBox" for="fileInput">
         <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 3l5 5h-3v6h-4V8H7l5-5zM4 15h2v4h12v-4h2v6H4v-6z"/></svg>
-        <span id="fileLabelText">Pilih gambar untuk diupload...</span>
+        <span id="fileLabelText">Pilih file untuk diupload...</span>
       </label>
-      <input type="file" id="fileInput" accept="image/*" style="display:none" onchange="onFileChosen(this)">
+      <input type="file" id="fileInput" accept="image/*,video/*,audio/*" style="display:none" onchange="onFileChosen(this)">
     </div>
     <button class="btn-main" id="submitBtn" onclick="runAction()">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
@@ -352,20 +352,20 @@ const TOOLS={
   catbox:{
     group:'tools',
     name:'Catbox',
-    desc:'Upload gambar jadi link',
+    desc:'Upload gambar/video/audio jadi link',
     icon:ICONS.upload,
     iconBg:'#fb923c',
     color:'#fb923c',
     shadow:'rgba(251,146,60,.45)',
     eyebrow:'IMG2URL',
     title:'Catbox Img2URL',
-    longDesc:'Upload gambar ke Catbox dan dapatkan direct URL yang bisa langsung digunakan.',
-    features:'JPG · PNG · GIF · WebP · Direct URL.',
+    longDesc:'Upload gambar, video, atau audio ke Catbox dan dapatkan direct URL. Catatan: file di atas ±4MB kemungkinan gagal karena batas platform hosting.',
+    features:'Gambar · Video · Audio (maks ±4MB) · Direct URL.',
     inputType:'file',
     actionLabel:'Upload ke Catbox',
     endpoint:'/api/catbox'
   }
-}; 
+};
 
 /* ============================================================
    RENDER GRID DI HOME
@@ -483,7 +483,7 @@ function openTool(id){
   document.getElementById('urlInput').value='';
   document.getElementById('urlInput').placeholder = t.placeholder || `Tempel URL ${t.name}...`;
   document.getElementById('fileInput').value='';
-  document.getElementById('fileLabelText').textContent='Pilih gambar untuk diupload...';
+  document.getElementById('fileLabelText').textContent='Pilih file untuk diupload...';
   document.getElementById('fileLabelBox').classList.remove('has-file');
 
   document.getElementById('submitLabel').textContent = t.actionLabel || 'Ambil Info';
@@ -541,7 +541,7 @@ function onFileChosen(input){
   }else{
 
     text.textContent =
-      'Pilih gambar untuk diupload...';
+      'Pilih file untuk diupload...';
 
     box.classList.remove('has-file');
   }
@@ -612,8 +612,7 @@ async function runDownload(t){
   }
 }
 
-/* Upload (Catbox) — fungsi & UI sudah jalan, tinggal isi ENDPOINT
-   kalau kamu sudah siap sambungkan API upload-nya. */
+/* Upload (Catbox) — mendukung gambar, video, dan audio (maks ±4MB) */
 async function uploadFile(t){
   const err = document.getElementById('errMsg');
   const info = document.getElementById('infoMsg');
@@ -623,13 +622,14 @@ async function uploadFile(t){
   hideResult();
 
   if(!chosenFile){
-    err.textContent = 'Pilih gambar dulu sebelum upload.';
+    err.textContent = 'Pilih file dulu sebelum upload.';
     err.classList.add('show');
     return;
   }
 
-  if(!chosenFile.type.startsWith('image/')){
-    err.textContent = 'File yang dipilih harus berupa gambar.';
+  const allowedPrefixes = ['image/', 'video/', 'audio/'];
+  if(!allowedPrefixes.some(p => chosenFile.type.startsWith(p))){
+    err.textContent = 'File yang dipilih harus berupa gambar, video, atau audio.';
     err.classList.add('show');
     return;
   }
@@ -638,7 +638,7 @@ async function uploadFile(t){
 
   if(chosenFile.size > maxSize){
     err.textContent =
-      'Ukuran gambar terlalu besar. Maksimal 4 MB.';
+      'Ukuran file terlalu besar. Maksimal 4 MB.';
     err.classList.add('show');
     return;
   }
@@ -713,10 +713,10 @@ async function uploadFile(t){
       'status-dot ok';
 
     document.getElementById('dStatusSub').textContent =
-      'Aktif · gambar berhasil diupload';
+      'Aktif · file berhasil diupload';
 
     info.textContent =
-      'Gambar berhasil diupload ke Catbox.';
+      'File berhasil diupload ke Catbox.';
 
     info.classList.add('show');
 
@@ -774,7 +774,7 @@ function renderCatboxResult(data){
   thumb.style.display = '';
 
   document.getElementById('resTitle').textContent =
-    data.filename || 'Gambar berhasil diupload';
+    data.filename || 'File berhasil diupload';
 
   document.getElementById('resPlatform').textContent =
     'Catbox';
