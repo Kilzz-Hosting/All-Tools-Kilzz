@@ -52,21 +52,15 @@ export default async function handler(req, res) {
 
     console.log('userhash exists:', !!process.env.CATBOX_USERHASH);
 
-    const formData = new FormData();
+    const userhash = (process.env.CATBOX_USERHASH || '').trim();
 
-    formData.append('reqtype', 'fileupload');
-    formData.append(
-      'userhash',
-      process.env.CATBOX_USERHASH
-    );
+console.log('userhash length:', userhash.length);
+console.log('userhash preview:', userhash.slice(0, 4) + '...' + userhash.slice(-4));
 
-    formData.append(
-      'fileToUpload',
-      new Blob([buffer], {
-        type: contentType,
-      }),
-      filename
-    );
+const formData = new FormData();
+
+formData.append('reqtype', 'fileupload');
+formData.append('userhash', userhash);
 
     const catboxResponse = await fetch(
       'https://catbox.moe/user/api.php',
